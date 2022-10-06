@@ -13,21 +13,23 @@ public class PlayerController : MonoBehaviour
     private bool jump;
     private bool canJump = true;
     private bool dash;
+    private bool isDashing;
     private bool canDash = true;
     private bool grounded = true;
     private bool run_R;
     private bool run_L;
+    private bool isFacingRight;
     private bool takeDamage;
     private bool die;
     private bool jumpTimerSet = false;
     private float newJumpTimer;
-    private bool dashTimerSet = false;
-    private float newDashTimer;
+
 
      
     [SerializeField][Range(0.0f, 70.0f)]private int hp = 100;        
     [SerializeField][Range(0.0f, 70.0f)]private float runSpeed = 5f;      
-    [SerializeField][Range(0.0f, 1000.0f)]private float dashForce = 250f;      
+    [SerializeField][Range(0.0f, 1000.0f)]private float dashPower = 250f;      
+    [SerializeField][Range(0.0f, 1000.0f)]private float dashCoolDown = .5f;      
     [SerializeField][Range(0.0f, 70.0f)]private float maxRunSpeed = 5f;    
     [SerializeField][Range(0.0f, 70.0f)]private float jumpHeight = 25f;       
     [SerializeField][Range(0.0f, 70.0f)]private float maxFallSpeed = 25f;    
@@ -35,7 +37,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField][Range(0.0f, 70.0f)]private float fallGravity = 4f;    
     [SerializeField][Range(0.0f, 70.0f)]private float stopGravity = 10f;    
     [SerializeField][Range(0.0f, 70.0f)]private float jumpTimer = .2f;
-    [SerializeField][Range(0.0f, 70.0f)]private float dashTimer = .2f;
+    [SerializeField][Range(0.0f, 70.0f)]private float dashPeriod = .2f;
 
     void Start()
     {
@@ -48,7 +50,7 @@ public class PlayerController : MonoBehaviour
         rb_player = GetComponent<Rigidbody2D>();
         isControlling = true;
         rb_player.gravityScale = gravity;
-        dashTimer = .5f;
+        dashPeriod = .5f;
         Debug.Log("Player Initialized - Systems Nominal");
     }
     private void SubscribeGameEvents()
@@ -73,15 +75,16 @@ public class PlayerController : MonoBehaviour
     void Update()
     {
         if (!isControlling) return;
+        if (isDashing) return;
         if (run_R || run_L) rb_player.gravityScale = gravity;
         if (!grounded && jump) rb_player.gravityScale = gravity;
         if (!grounded && !jump) rb_player.gravityScale = fallGravity;
         if (!run_R && !run_L && !jump && grounded) rb_player.gravityScale = stopGravity;
         if (rb_player.velocity.x > maxRunSpeed)
             rb_player.velocity = new Vector2(maxRunSpeed, rb_player.velocity.y);
-        if (rb_player.velocity.x < -maxRunSpeed)
-            rb_player.velocity = new Vector2(-maxRunSpeed, rb_player.velocity.y);
-
+        if (rb_player.velocity.y < -maxFallSpeed)
+            rb_player.velocity = new Vector2(rb_player.velocity.x, -maxFallSpeed);
+        Flip();
         if (jumpTimerSet)
         {
             canJump = false;
@@ -95,7 +98,8 @@ public class PlayerController : MonoBehaviour
                 jumpTimerSet = false;
             }
         }        
-        if (dashTimerSet)
+/*        
+ *        if (dashTimerSet)
         {
             canDash = false;
             rb_player.gravityScale = 0;
@@ -110,12 +114,13 @@ public class PlayerController : MonoBehaviour
                 rb_player.gravityScale = gravity;
             }
         }
+*/
     }
     void FixedUpdate()
     {
         if (!isControlling) return;
         if (jump && grounded) Jump();
-        if (canDash && dash) Dash();
+        if (canDash && dash) StartCoroutine(Dash());
         if (run_R == true) Run_R();
         if (run_L == true) Run_L();
     }
@@ -142,7 +147,9 @@ public class PlayerController : MonoBehaviour
         }
 
     }    
-    private void Dash()
+
+/*    
+ *    private void Dash()
     {
         if (canDash)
         {
@@ -155,6 +162,7 @@ public class PlayerController : MonoBehaviour
         }
 
     }
+*/
     private void Run_R()
     {
         rb_player.AddForce(transform.right * runSpeed, ForceMode2D.Impulse);
@@ -162,6 +170,16 @@ public class PlayerController : MonoBehaviour
     private void Run_L()
     {
         rb_player.AddForce(transform.right * -runSpeed, ForceMode2D.Impulse);
+    }
+    private void Flip()
+    {
+        if(isFacingRight && run_L || !isFacingRight && run_R)
+        {
+            Vector3 localScale = transform.localScale;
+            isFacingRight = !isFacingRight;
+            localScale.x *= -1f;
+            transform.localScale = localScale;
+        }
     }
 
     private void CheckHp()
@@ -255,6 +273,24 @@ public class PlayerController : MonoBehaviour
     {
         TakeDamage();
     }
+
+    private IEnumerator Dash()
+    {
+        canDash = false;
+        isDashing = true;
+        float originalGravity = rb_player.gravityScale;
+        float tempMaxRunSpeed = maxRunSpeed; 
+        maxRunSpeed = dashPower;
+        rb_player.gravityScale = 0f;
+        rb_player.velocity = new Vector2(transform.localScale.x * dashPower, 0f);
+        yield return new WaitForSeconds(dashPeriod);
+        rb_player.gravityScale = originalGravity;
+        isDashing = false;
+        maxRunSpeed = tempMaxRunSpeed;
+        yield return new WaitForSeconds(dashCoolDown);
+        canDash = true;
+    }
+
     private void OnDestroy()
     {
         GameEvents.current.onJump_Input -= OnJump;

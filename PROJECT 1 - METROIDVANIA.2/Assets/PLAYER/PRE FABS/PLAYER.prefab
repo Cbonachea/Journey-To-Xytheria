@@ -139,10 +139,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   hp: 100
   runSpeed: 1
+  dashForce: 25
   maxRunSpeed: 5
   jumpHeight: 35
-  maxFallSpeed: 25
+  maxFallSpeed: 20
   gravity: 3
   fallGravity: 7
   stopGravity: 30
   jumpTimer: 0.2
+  dashTimer: 0.5
