@@ -13,6 +13,7 @@ public class PlayerController : MonoBehaviour
     private bool attack;
     private bool jump;
     private bool canJump = true;
+   // private bool isJumping;
     private bool dash;
     private bool isDashing;
     private bool canDash = true;
@@ -22,23 +23,22 @@ public class PlayerController : MonoBehaviour
     private bool isFacingRight = true;
     private bool takeDamage;
     private bool die;
-    private bool jumpTimerSet = false;
-    private float newJumpTimer;
+
 
 
      
     [SerializeField][Range(0.0f, 70.0f)]private int hp = 100;        
     [SerializeField][Range(0.0f, 70.0f)]private float runSpeed = 9f;      
     [SerializeField][Range(0.0f, 1000.0f)]private float dashPower = 250f;      
-    [SerializeField][Range(0.0f, 1000.0f)]private float dashCoolDown = .5f;      
+    [SerializeField][Range(0.0f, 1000.0f)]private float dashCoolDown = .2f;      
     [SerializeField][Range(0.0f, 70.0f)]private float maxRunSpeed = 5f;    
     [SerializeField][Range(0.0f, 70.0f)]private float jumpHeight = 25f;       
     [SerializeField][Range(0.0f, 70.0f)]private float maxFallSpeed = 25f;    
     [SerializeField][Range(0.0f, 70.0f)]private float gravity = 3f;    
     [SerializeField][Range(0.0f, 70.0f)]private float fallGravity = 4f;    
     [SerializeField][Range(0.0f, 70.0f)]private float stopGravity = 10f;    
-    [SerializeField][Range(0.0f, 70.0f)]private float jumpTimer = .2f;
     [SerializeField][Range(0.0f, 70.0f)]private float dashPeriod = .1f;
+    [SerializeField][Range(0.0f, 70.0f)]private float jumpCoolDown = .3f;
 
     void Start()
     {
@@ -51,7 +51,6 @@ public class PlayerController : MonoBehaviour
         rb_player = GetComponent<Rigidbody2D>();
         isControlling = true;
         rb_player.gravityScale = gravity;
-        dashPeriod = .5f;
         Debug.Log("Player Initialized - Systems Nominal");
     }
     private void SubscribeGameEvents()
@@ -88,26 +87,13 @@ public class PlayerController : MonoBehaviour
         if (rb_player.velocity.y < -maxFallSpeed)
             rb_player.velocity = new Vector2(rb_player.velocity.x, -maxFallSpeed);
         Flip();
-        if (jumpTimerSet)
-        {
-            canJump = false;
-            if (newJumpTimer > 0)
-            {
-                newJumpTimer -= Time.deltaTime;
-            }
-            else
-            {
-                canJump = true;
-                jumpTimerSet = false;
-            }
-        }        
 
 
     }
     void FixedUpdate()
     {
         if (!isControlling) return;
-        if (jump && grounded) Jump();
+        if (canJump && jump && grounded) StartCoroutine(Jump());
         if (canDash && dash) StartCoroutine(Dash());
         if (run_R == true) Run_R();
         if (run_L == true) Run_L();
@@ -122,19 +108,6 @@ public class PlayerController : MonoBehaviour
     {
         if (collision.gameObject.tag == "ground") grounded = true;
     }
-
-    private void Jump()
-    {
-        if (canJump)
-        {
-            newJumpTimer = jumpTimer;
-            jumpTimerSet = true;
-            grounded = false;
-            rb_player.gravityScale = gravity;
-            rb_player.AddForce(transform.up * jumpHeight, ForceMode2D.Impulse);
-        }
-
-    }    
 
 
     private void Run_R()
@@ -265,6 +238,16 @@ public class PlayerController : MonoBehaviour
         maxRunSpeed = tempMaxRunSpeed;
         yield return new WaitForSeconds(dashCoolDown);
         canDash = true;
+    }    
+    private IEnumerator Jump()
+    {
+        canJump = false;
+    //    isJumping = true;
+        rb_player.gravityScale = 3f;
+        rb_player.AddForce(transform.up * jumpHeight, ForceMode2D.Impulse);
+        yield return new WaitForSeconds(jumpCoolDown);
+    //    isJumping = false;
+        canJump = true;
     }
 
     private void OnDestroy()
