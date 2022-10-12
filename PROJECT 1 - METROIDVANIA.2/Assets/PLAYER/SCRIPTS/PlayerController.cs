@@ -8,6 +8,7 @@ public class PlayerController : MonoBehaviour
 
     private bool isControlling;    
     private Rigidbody2D rb_player;
+    private Vector3 playerScale;
 
     private bool attack;
     private bool jump;
@@ -18,7 +19,7 @@ public class PlayerController : MonoBehaviour
     private bool grounded = true;
     private bool run_R;
     private bool run_L;
-    private bool isFacingRight;
+    private bool isFacingRight = true;
     private bool takeDamage;
     private bool die;
     private bool jumpTimerSet = false;
@@ -27,7 +28,7 @@ public class PlayerController : MonoBehaviour
 
      
     [SerializeField][Range(0.0f, 70.0f)]private int hp = 100;        
-    [SerializeField][Range(0.0f, 70.0f)]private float runSpeed = 5f;      
+    [SerializeField][Range(0.0f, 70.0f)]private float runSpeed = 9f;      
     [SerializeField][Range(0.0f, 1000.0f)]private float dashPower = 250f;      
     [SerializeField][Range(0.0f, 1000.0f)]private float dashCoolDown = .5f;      
     [SerializeField][Range(0.0f, 70.0f)]private float maxRunSpeed = 5f;    
@@ -37,7 +38,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField][Range(0.0f, 70.0f)]private float fallGravity = 4f;    
     [SerializeField][Range(0.0f, 70.0f)]private float stopGravity = 10f;    
     [SerializeField][Range(0.0f, 70.0f)]private float jumpTimer = .2f;
-    [SerializeField][Range(0.0f, 70.0f)]private float dashPeriod = .2f;
+    [SerializeField][Range(0.0f, 70.0f)]private float dashPeriod = .1f;
 
     void Start()
     {
@@ -81,7 +82,9 @@ public class PlayerController : MonoBehaviour
         if (!grounded && !jump) rb_player.gravityScale = fallGravity;
         if (!run_R && !run_L && !jump && grounded) rb_player.gravityScale = stopGravity;
         if (rb_player.velocity.x > maxRunSpeed)
-            rb_player.velocity = new Vector2(maxRunSpeed, rb_player.velocity.y);
+            rb_player.velocity = new Vector2(maxRunSpeed, rb_player.velocity.y);        
+        if (rb_player.velocity.x < -maxRunSpeed)
+            rb_player.velocity = new Vector2(-maxRunSpeed, rb_player.velocity.y);
         if (rb_player.velocity.y < -maxFallSpeed)
             rb_player.velocity = new Vector2(rb_player.velocity.x, -maxFallSpeed);
         Flip();
@@ -98,23 +101,8 @@ public class PlayerController : MonoBehaviour
                 jumpTimerSet = false;
             }
         }        
-/*        
- *        if (dashTimerSet)
-        {
-            canDash = false;
-            rb_player.gravityScale = 0;
-            if (newDashTimer > 0)
-            {
-                newDashTimer -= Time.deltaTime;
-            }
-            else
-            {
-                canDash = true;
-                dashTimerSet = false;
-                rb_player.gravityScale = gravity;
-            }
-        }
-*/
+
+
     }
     void FixedUpdate()
     {
@@ -148,21 +136,7 @@ public class PlayerController : MonoBehaviour
 
     }    
 
-/*    
- *    private void Dash()
-    {
-        if (canDash)
-        {
-            newDashTimer = dashTimer;
-            dashTimerSet = true;
-            Debug.Log("Dash");
-            rb_player.gravityScale = gravity - gravity;
-            rb_player.AddForce(transform.right * dashForce, ForceMode2D.Impulse);
-            canDash = false;
-        }
 
-    }
-*/
     private void Run_R()
     {
         rb_player.AddForce(transform.right * runSpeed, ForceMode2D.Impulse);
@@ -173,12 +147,14 @@ public class PlayerController : MonoBehaviour
     }
     private void Flip()
     {
+        if (!isControlling) return;
         if(isFacingRight && run_L || !isFacingRight && run_R)
         {
-            Vector3 localScale = transform.localScale;
+            playerScale = transform.localScale;
+            playerScale.x *= -1;
+            transform.localScale = playerScale;
             isFacingRight = !isFacingRight;
-            localScale.x *= -1f;
-            transform.localScale = localScale;
+            Debug.Log(isFacingRight);
         }
     }
 
