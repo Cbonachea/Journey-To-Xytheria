@@ -47,7 +47,7 @@ Rigidbody2D:
   m_Simulated: 1
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
-  m_Mass: 50
+  m_Mass: 3
   m_LinearDrag: 0.5
   m_AngularDrag: 0.5
   m_GravityScale: 3
@@ -84,17 +84,24 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 818f1624d42957a4fbd3bc83b3ed4b56, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  enemyLayer:
+    serializedVersion: 2
+    m_Bits: 0
   hp: 100
-  runSpeed: 1
-  dashPower: 40
-  dashCoolDown: 0.2
-  maxRunSpeed: 10
-  jumpHeight: 35
-  maxFallSpeed: 20
   gravity: 3
   fallGravity: 7
-  dashPeriod: 0.1
+  stopGravity: 10
+  maxFallSpeed: 20
+  jumpHeight: 35
   jumpCoolDown: 0.3
+  runSpeed: 1
+  maxRunSpeed: 6
+  dashPower: 40
+  dashCoolDown: 0.3
+  dashPeriod: 0.1
+  attackDamage: 1
+  attackWindUp: 0.3
+  attackCoolDown: 0.3
 --- !u!212 &3832617430774381770
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -135,7 +142,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 1
+  m_SortingOrder: 2
   m_Sprite: {fileID: 21300000, guid: a122b48810c543745b84e1092b533c13, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0

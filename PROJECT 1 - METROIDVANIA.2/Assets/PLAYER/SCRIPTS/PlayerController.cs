@@ -6,21 +6,26 @@ using UnityEngine;
 public class PlayerController : MonoBehaviour
 {
 
-    private bool isControlling;    
     private Rigidbody2D rb_player;
     private Vector3 playerScale;
+    private Transform attackPoint;
+    private float attackRange = 0.5f;
+    public LayerMask enemyLayer;
 
+    private bool isControlling;    
+    private bool isFacingRight = true;
     private bool attack;
+    private bool canAttack;
+    private bool isAttacking;
     private bool jump;
     private bool canJump = true;
-   // private bool isJumping;
+    private bool isJumping;
     private bool dash;
-    private bool isDashing;
     private bool canDash = true;
+    private bool isDashing;
     private bool grounded = true;
     private bool run_R;
     private bool run_L;
-    private bool isFacingRight = true;
     private bool takeDamage;
     private bool die;
 
@@ -28,17 +33,25 @@ public class PlayerController : MonoBehaviour
 
      
     [SerializeField][Range(0.0f, 70.0f)]private int hp = 100;        
-    [SerializeField][Range(0.0f, 70.0f)]private float runSpeed = 9f;      
-    [SerializeField][Range(0.0f, 1000.0f)]private float dashPower = 250f;      
-    [SerializeField][Range(0.0f, 1000.0f)]private float dashCoolDown = .2f;      
-    [SerializeField][Range(0.0f, 70.0f)]private float maxRunSpeed = 5f;    
-    [SerializeField][Range(0.0f, 70.0f)]private float jumpHeight = 25f;       
-    [SerializeField][Range(0.0f, 70.0f)]private float maxFallSpeed = 25f;    
+
     [SerializeField][Range(0.0f, 70.0f)]private float gravity = 3f;    
     [SerializeField][Range(0.0f, 70.0f)]private float fallGravity = 4f;    
     [SerializeField][Range(0.0f, 70.0f)]private float stopGravity = 10f;    
-    [SerializeField][Range(0.0f, 70.0f)]private float dashPeriod = .1f;
+    [SerializeField][Range(0.0f, 70.0f)]private float maxFallSpeed = 25f;    
+
+    [SerializeField][Range(0.0f, 70.0f)]private float jumpHeight = 25f;       
     [SerializeField][Range(0.0f, 70.0f)]private float jumpCoolDown = .3f;
+
+    [SerializeField][Range(0.0f, 70.0f)]private float runSpeed = 9f;      
+    [SerializeField][Range(0.0f, 70.0f)]private float maxRunSpeed = 5f;    
+
+    [SerializeField][Range(0.0f, 1000.0f)]private float dashPower = 250f;      
+    [SerializeField][Range(0.0f, 1000.0f)]private float dashCoolDown = .2f;      
+    [SerializeField][Range(0.0f, 70.0f)]private float dashPeriod = .1f;
+
+    [SerializeField][Range(0.0f, 70.0f)]private float attackDamage = 1f;
+    [SerializeField][Range(0.0f, 70.0f)]private float attackWindUp = .3f;
+    [SerializeField][Range(0.0f, 70.0f)]private float attackCoolDown = .3f;
 
     void Start()
     {
@@ -71,7 +84,6 @@ public class PlayerController : MonoBehaviour
         Debug.Log("Game Events Subscribed");
     }
 
-    
     void Update()
     {
         if (!isControlling) return;
@@ -95,6 +107,7 @@ public class PlayerController : MonoBehaviour
         if (!isControlling) return;
         if (canJump && jump && grounded) StartCoroutine(Jump());
         if (canDash && dash) StartCoroutine(Dash());
+        if (canAttack && attack) StartCoroutine(Attack());
         if (run_R == true) Run_R();
         if (run_L == true) Run_L();
     }
@@ -153,10 +166,6 @@ public class PlayerController : MonoBehaviour
         rb_player.angularDrag = 0f;
         rb_player.gravityScale = -0.4f;
         Debug.Log("Player Dead");
-    }
-    private void Attack()
-    {
-
     }
     private void OnJump()
     {
@@ -238,7 +247,7 @@ public class PlayerController : MonoBehaviour
         maxRunSpeed = tempMaxRunSpeed;
         yield return new WaitForSeconds(dashCoolDown);
         canDash = true;
-    }    
+    }        
     private IEnumerator Jump()
     {
         canJump = false;
@@ -248,6 +257,26 @@ public class PlayerController : MonoBehaviour
         yield return new WaitForSeconds(jumpCoolDown);
     //    isJumping = false;
         canJump = true;
+    }
+    private IEnumerator Attack()
+    {
+        isControlling = false;
+        canAttack = false;
+        isAttacking = true;
+        //enter wind up state animation trigger
+        yield return new WaitForSeconds(attackWindUp);
+        
+        Collider2D[] hitEnemies = Physics2D.OverlapCircleAll(attackPoint.position, attackRange, enemyLayer);
+        
+        foreach(Collider2D enemy in hitEnemies)
+        {
+            Debug.Log("Hit" + enemy.name);
+        }
+        
+        //enter recovery state animation trigger
+        yield return new WaitForSeconds(attackCoolDown);
+        isControlling = true;
+        canAttack = true;
     }
 
     private void OnDestroy()
