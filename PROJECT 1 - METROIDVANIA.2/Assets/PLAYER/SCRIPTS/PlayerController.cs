@@ -11,6 +11,7 @@ public class PlayerController : MonoBehaviour
     private Transform attackPoint;
     private float attackRange = 0.5f;
     public LayerMask enemyLayer;
+    private Animator animator;
 
     private bool isControlling;    
     private bool isFacingRight = true;
@@ -62,6 +63,7 @@ public class PlayerController : MonoBehaviour
     {
         SubscribeGameEvents();
         rb_player = GetComponent<Rigidbody2D>();
+        animator = GetComponent<Animator>();
         isControlling = true;
         rb_player.gravityScale = gravity;
         Debug.Log("Player Initialized - Systems Nominal");
@@ -90,8 +92,16 @@ public class PlayerController : MonoBehaviour
         if (isDashing) return;
         if (run_R || run_L) rb_player.gravityScale = gravity;
         if (!grounded && jump) rb_player.gravityScale = gravity;
-        if (!grounded && !jump) rb_player.gravityScale = fallGravity;
-        if (!run_R && !run_L && !jump && grounded) rb_player.gravityScale = stopGravity;
+        if (!grounded && !jump)
+        {
+            rb_player.gravityScale = fallGravity;
+            animator.SetTrigger("isFalling");
+        }
+        if (!run_R && !run_L && !jump && grounded)
+        {
+            rb_player.gravityScale = stopGravity;
+            animator.SetTrigger("isStopping");
+        }
         if (rb_player.velocity.x > maxRunSpeed)
             rb_player.velocity = new Vector2(maxRunSpeed, rb_player.velocity.y);        
         if (rb_player.velocity.x < -maxRunSpeed)
@@ -125,10 +135,12 @@ public class PlayerController : MonoBehaviour
 
     private void Run_R()
     {
+        animator.SetTrigger("isRunning");
         rb_player.AddForce(transform.right * runSpeed, ForceMode2D.Impulse);
     }
     private void Run_L()
     {
+        animator.SetTrigger("isRunning");
         rb_player.AddForce(transform.right * -runSpeed, ForceMode2D.Impulse);
     }
     private void Flip()
@@ -191,7 +203,7 @@ public class PlayerController : MonoBehaviour
     private void OnAttack()
     {
         if (attack == true) return;
-        Attack();
+        attack = true;
     }    
     private void OnAttack_Idle()
     {
@@ -206,6 +218,7 @@ public class PlayerController : MonoBehaviour
     private void OnRun_R_Idle()
     {
         if (!run_R) return;
+        animator.SetTrigger("isIdle");
         run_R = false;
     }
     private void OnRun_L()
@@ -216,6 +229,7 @@ public class PlayerController : MonoBehaviour
     private void OnRun_L_Idle()
     {
         if (!run_L) return;
+        animator.SetTrigger("isIdle");
         run_L = false;
     }
     private void NoHp()
@@ -236,6 +250,7 @@ public class PlayerController : MonoBehaviour
     {
         canDash = false;
         isDashing = true;
+        animator.SetTrigger("isDashing");
         float originalGravity = rb_player.gravityScale;
         float tempMaxRunSpeed = maxRunSpeed; 
         maxRunSpeed = dashPower;
@@ -246,12 +261,14 @@ public class PlayerController : MonoBehaviour
         isDashing = false;
         maxRunSpeed = tempMaxRunSpeed;
         yield return new WaitForSeconds(dashCoolDown);
+        animator.SetTrigger("isIdle");
         canDash = true;
     }        
     private IEnumerator Jump()
     {
         canJump = false;
-    //    isJumping = true;
+        //    isJumping = true;
+        animator.SetTrigger("isJumping");
         rb_player.gravityScale = 3f;
         rb_player.AddForce(transform.up * jumpHeight, ForceMode2D.Impulse);
         yield return new WaitForSeconds(jumpCoolDown);
@@ -263,6 +280,7 @@ public class PlayerController : MonoBehaviour
         isControlling = false;
         canAttack = false;
         isAttacking = true;
+        animator.SetTrigger("isAttacking");
         //enter wind up state animation trigger
         yield return new WaitForSeconds(attackWindUp);
         
@@ -276,6 +294,7 @@ public class PlayerController : MonoBehaviour
         //enter recovery state animation trigger
         yield return new WaitForSeconds(attackCoolDown);
         isControlling = true;
+        animator.SetTrigger("isIdle");
         canAttack = true;
     }
 
