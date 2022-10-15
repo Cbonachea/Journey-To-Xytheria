@@ -97,7 +97,7 @@ MonoBehaviour:
   jumpCoolDown: 0.3
   runSpeed: 1
   maxRunSpeed: 6
-  dashPower: 40
+  dashPower: 25
   dashCoolDown: 0.3
   dashPeriod: 0.1
   attackDamage: 1

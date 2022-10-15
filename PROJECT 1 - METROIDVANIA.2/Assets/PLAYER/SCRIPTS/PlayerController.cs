@@ -95,12 +95,10 @@ public class PlayerController : MonoBehaviour
         if (!grounded && !jump)
         {
             rb_player.gravityScale = fallGravity;
-            animator.SetTrigger("isFalling");
         }
         if (!run_R && !run_L && !jump && grounded)
         {
             rb_player.gravityScale = stopGravity;
-            animator.SetTrigger("isStopping");
         }
         if (rb_player.velocity.x > maxRunSpeed)
             rb_player.velocity = new Vector2(maxRunSpeed, rb_player.velocity.y);        
@@ -130,6 +128,7 @@ public class PlayerController : MonoBehaviour
     private void OnCollisionStay2D(Collision2D collision)
     {
         if (collision.gameObject.tag == "ground") grounded = true;
+        if (!run_R && !run_L && !jump && !dash && !attack) animator.SetTrigger("isIdle");
     }
 
 
@@ -137,10 +136,11 @@ public class PlayerController : MonoBehaviour
     {
         animator.SetTrigger("isRunning");
         rb_player.AddForce(transform.right * runSpeed, ForceMode2D.Impulse);
+        if(!grounded) animator.SetTrigger("isFalling");
     }
     private void Run_L()
     {
-        animator.SetTrigger("isRunning");
+        if (grounded) animator.SetTrigger("isRunning");
         rb_player.AddForce(transform.right * -runSpeed, ForceMode2D.Impulse);
     }
     private void Flip()
@@ -189,7 +189,9 @@ public class PlayerController : MonoBehaviour
     {
         if (!jump) return;
         jump = false;
-    }      
+        animator.SetTrigger("isFalling");
+
+    }
     private void OnDash()
     {
         if (dash) return;
@@ -218,7 +220,6 @@ public class PlayerController : MonoBehaviour
     private void OnRun_R_Idle()
     {
         if (!run_R) return;
-        animator.SetTrigger("isIdle");
         run_R = false;
     }
     private void OnRun_L()
@@ -229,7 +230,6 @@ public class PlayerController : MonoBehaviour
     private void OnRun_L_Idle()
     {
         if (!run_L) return;
-        animator.SetTrigger("isIdle");
         run_L = false;
     }
     private void NoHp()
@@ -268,8 +268,8 @@ public class PlayerController : MonoBehaviour
     {
         canJump = false;
         //    isJumping = true;
-        animator.SetTrigger("isJumping");
         rb_player.gravityScale = 3f;
+        animator.SetTrigger("isJumping");
         rb_player.AddForce(transform.up * jumpHeight, ForceMode2D.Impulse);
         yield return new WaitForSeconds(jumpCoolDown);
     //    isJumping = false;
