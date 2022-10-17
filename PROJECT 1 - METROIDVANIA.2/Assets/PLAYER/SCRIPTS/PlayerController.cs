@@ -7,6 +7,8 @@ public class PlayerController : MonoBehaviour
 {
 
     private Rigidbody2D rb_player;
+    private float verticleSpeed;
+    private float horizontalSpeed;
     private Vector3 playerScale;
     private Transform attackPoint;
     private float attackRange = 0.5f;
@@ -88,6 +90,7 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
+        
         if (!isControlling) return;
         if (isDashing) return;
         if (run_R || run_L) rb_player.gravityScale = gravity;
@@ -106,6 +109,20 @@ public class PlayerController : MonoBehaviour
             rb_player.velocity = new Vector2(-maxRunSpeed, rb_player.velocity.y);
         if (rb_player.velocity.y < -maxFallSpeed)
             rb_player.velocity = new Vector2(rb_player.velocity.x, -maxFallSpeed);
+        verticleSpeed = rb_player.velocity.y;
+        horizontalSpeed = rb_player.velocity.x;
+        if (verticleSpeed < -.2f)
+        {
+            animator.SetBool("isJumping", false);
+            animator.SetBool("isFalling", true);
+        }
+        else if (verticleSpeed > .2f) animator.SetBool("isJumping", true);
+        if (Mathf.Abs(horizontalSpeed) >= .2f && grounded) animator.SetBool("isRunning", true);
+        else if (Mathf.Abs(horizontalSpeed) <= .2f && grounded)
+        {
+            animator.SetBool("isStopping", false);
+            animator.SetBool("isIdle", true);
+        }
         Flip();
 
 
@@ -128,19 +145,21 @@ public class PlayerController : MonoBehaviour
     private void OnCollisionStay2D(Collision2D collision)
     {
         if (collision.gameObject.tag == "ground") grounded = true;
-        if (!run_R && !run_L && !jump && !dash && !attack) animator.SetTrigger("isIdle");
+    }    
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.gameObject.tag == "ground") animator.SetBool("isFalling", false);
     }
 
 
     private void Run_R()
     {
-        animator.SetTrigger("isRunning");
+        if (grounded) animator.SetBool("isRunning", true);
         rb_player.AddForce(transform.right * runSpeed, ForceMode2D.Impulse);
-        if(!grounded) animator.SetTrigger("isFalling");
     }
     private void Run_L()
     {
-        if (grounded) animator.SetTrigger("isRunning");
+        if (grounded) animator.SetBool("isRunning", true);
         rb_player.AddForce(transform.right * -runSpeed, ForceMode2D.Impulse);
     }
     private void Flip()
@@ -189,8 +208,6 @@ public class PlayerController : MonoBehaviour
     {
         if (!jump) return;
         jump = false;
-        animator.SetTrigger("isFalling");
-
     }
     private void OnDash()
     {
@@ -216,21 +233,27 @@ public class PlayerController : MonoBehaviour
     {
         if (run_R == true) return;;
         run_R = true;
+        animator.SetBool("isRunning", true);
     }
     private void OnRun_R_Idle()
     {
         if (!run_R) return;
         run_R = false;
+        animator.SetBool("isRunning", false);
+        animator.SetBool("isStopping", true);
     }
     private void OnRun_L()
     {
         if (run_L == true) return;
         run_L = true;
-    }    
+        animator.SetBool("isRunning", true);
+    }
     private void OnRun_L_Idle()
     {
         if (!run_L) return;
         run_L = false;
+        animator.SetBool("isRunning", false);
+        animator.SetBool("isStopping", true);
     }
     private void NoHp()
     {
@@ -250,7 +273,6 @@ public class PlayerController : MonoBehaviour
     {
         canDash = false;
         isDashing = true;
-        animator.SetTrigger("isDashing");
         float originalGravity = rb_player.gravityScale;
         float tempMaxRunSpeed = maxRunSpeed; 
         maxRunSpeed = dashPower;
@@ -261,7 +283,6 @@ public class PlayerController : MonoBehaviour
         isDashing = false;
         maxRunSpeed = tempMaxRunSpeed;
         yield return new WaitForSeconds(dashCoolDown);
-        animator.SetTrigger("isIdle");
         canDash = true;
     }        
     private IEnumerator Jump()
@@ -269,7 +290,6 @@ public class PlayerController : MonoBehaviour
         canJump = false;
         //    isJumping = true;
         rb_player.gravityScale = 3f;
-        animator.SetTrigger("isJumping");
         rb_player.AddForce(transform.up * jumpHeight, ForceMode2D.Impulse);
         yield return new WaitForSeconds(jumpCoolDown);
     //    isJumping = false;
@@ -280,7 +300,6 @@ public class PlayerController : MonoBehaviour
         isControlling = false;
         canAttack = false;
         isAttacking = true;
-        animator.SetTrigger("isAttacking");
         //enter wind up state animation trigger
         yield return new WaitForSeconds(attackWindUp);
         
@@ -294,7 +313,6 @@ public class PlayerController : MonoBehaviour
         //enter recovery state animation trigger
         yield return new WaitForSeconds(attackCoolDown);
         isControlling = true;
-        animator.SetTrigger("isIdle");
         canAttack = true;
     }
 
