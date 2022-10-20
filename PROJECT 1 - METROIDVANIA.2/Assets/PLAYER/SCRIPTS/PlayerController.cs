@@ -292,7 +292,7 @@ public class PlayerController : MonoBehaviour
         rb_player.gravityScale = 3f;
         rb_player.AddForce(transform.up * jumpHeight, ForceMode2D.Impulse);
         yield return new WaitForSeconds(jumpCoolDown);
-    //    isJumping = false;
+        //    isJumping = false;
         canJump = true;
     }
     private IEnumerator Attack()
