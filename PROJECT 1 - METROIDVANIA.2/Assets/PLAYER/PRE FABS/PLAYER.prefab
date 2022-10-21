@@ -13,8 +13,9 @@ GameObject:
   - component: {fileID: 933630613326395176}
   - component: {fileID: 3832617430774381770}
   - component: {fileID: 938241990817177519}
-  - component: {fileID: 8722408696879159243}
-  - component: {fileID: 478586944173442982}
+  - component: {fileID: 7337010055841433693}
+  - component: {fileID: 3798789652745798056}
+  - component: {fileID: 932219995834042064}
   m_Layer: 0
   m_Name: PLAYER
   m_TagString: Untagged
@@ -146,7 +147,7 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
---- !u!114 &8722408696879159243
+--- !u!114 &7337010055841433693
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -161,22 +162,14 @@ MonoBehaviour:
   enemyLayer:
     serializedVersion: 2
     m_Bits: 0
+  grounded: 1
   hp: 100
-  gravity: 3
-  fallGravity: 4
-  stopGravity: 10
-  maxFallSpeed: 25
-  jumpHeight: 25
-  jumpCoolDown: 0.3
-  runSpeed: 9
-  maxRunSpeed: 5
-  dashPower: 250
-  dashCoolDown: 0.2
-  dashPeriod: 0.1
+  playerMovement: {fileID: 3798789652745798056}
+  playerCollision: {fileID: 932219995834042064}
   attackDamage: 1
   attackWindUp: 0.3
   attackCoolDown: 0.3
---- !u!114 &478586944173442982
+--- !u!114 &3798789652745798056
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -188,3 +181,28 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 464c8ef9accc3f245937b389c625391c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  playerController: {fileID: 7337010055841433693}
+  gravity: 3
+  fallGravity: 4
+  stopGravity: 10
+  maxFallSpeed: 25
+  jumpHeight: 25
+  jumpCoolDown: 0.3
+  runSpeed: 9
+  maxRunSpeed: 5
+  dashPower: 250
+  dashCoolDown: 0.2
+  dashPeriod: 0.1
+--- !u!114 &932219995834042064
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3071217719308447891}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 76668bf9d69e2304389871620571b18f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playerController: {fileID: 7337010055841433693}

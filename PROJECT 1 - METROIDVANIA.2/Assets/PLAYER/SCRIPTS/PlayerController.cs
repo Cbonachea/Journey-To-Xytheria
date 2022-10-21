@@ -17,13 +17,14 @@ public class PlayerController : MonoBehaviour
     private bool attack;
     private bool canAttack;
     private bool isAttacking;
-    private bool grounded = true;
+    [SerializeField] internal bool grounded = true;
     private bool takeDamage;
     private bool die;
 
      
     [SerializeField][Range(0.0f, 70.0f)]private int hp = 100;        
-    [SerializeField] internal PlayerMovement playerMovement;        
+    [SerializeField] private PlayerMovement playerMovement;        
+    [SerializeField] private PlayerCollision playerCollision;        
 
 
 
@@ -39,7 +40,6 @@ public class PlayerController : MonoBehaviour
     private void InitializePlayer()
     {
         SubscribeGameEvents();
-        rb_player = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
         isControlling = true;
 
@@ -59,14 +59,7 @@ public class PlayerController : MonoBehaviour
 
 
 
-    private void OnCollisionExit2D(Collision2D collision)
-    {
-        if (collision.gameObject.tag == "ground") grounded = false;
-    }
-    private void OnCollisionStay2D(Collision2D collision)
-    {
-        if (collision.gameObject.tag == "ground") grounded = true;
-    }    
+ 
 
 
 

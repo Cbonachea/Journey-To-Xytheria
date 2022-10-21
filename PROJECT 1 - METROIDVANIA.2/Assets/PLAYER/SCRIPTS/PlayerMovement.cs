@@ -6,16 +6,19 @@ public class PlayerMovement : MonoBehaviour
 {
 
     private Vector3 playerScale;
-    [SerializeField] internal PlayerController playerController;
+    private Rigidbody2D rb_player;
+    private Animator playerAnimator;
+    [SerializeField] PlayerController playerController;
 
 
     private bool jump;
     private bool canJump = true;
     private bool isJumping;
+    private bool grounded;
     private bool dash;
     private bool canDash = true;
     private bool isDashing;
-    private bool grounded = true;
+
     private bool run_R;
     private bool run_L;
     private bool isFacingRight = true;
@@ -38,8 +41,9 @@ public class PlayerMovement : MonoBehaviour
 
     private void Start()
     {
-    
-    playerController.rb_player.gravityScale = gravity;     
+        playerAnimator = GetComponent<Animator>();
+        rb_player = GetComponent<Rigidbody2D>();
+        rb_player.gravityScale = gravity;
     }
 
     private void SubscribeGameEvents()
@@ -68,6 +72,8 @@ public class PlayerMovement : MonoBehaviour
         {
             rb_player.gravityScale = stopGravity;
         }
+
+
         if (rb_player.velocity.x > maxRunSpeed)
             rb_player.velocity = new Vector2(maxRunSpeed, rb_player.velocity.y);
         if (rb_player.velocity.x < -maxRunSpeed)
@@ -75,8 +81,7 @@ public class PlayerMovement : MonoBehaviour
         if (rb_player.velocity.y < -maxFallSpeed)
             rb_player.velocity = new Vector2(rb_player.velocity.x, -maxFallSpeed);
 
-
-
+        if (isJumping) playerAnimator.SetBool("isJumping", true);
 
         Flip();
 
@@ -158,11 +163,11 @@ public class PlayerMovement : MonoBehaviour
     private IEnumerator Jump()
     {
         canJump = false;
-        //    isJumping = true;
+        isJumping = true;
         rb_player.gravityScale = 3f;
         rb_player.AddForce(transform.up * jumpHeight, ForceMode2D.Impulse);
         yield return new WaitForSeconds(jumpCoolDown);
-        //    isJumping = false;
+        isJumping = false;
         canJump = true;
     }
 
