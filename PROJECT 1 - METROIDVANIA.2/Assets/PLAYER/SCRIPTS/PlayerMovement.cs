@@ -22,7 +22,7 @@ public class PlayerMovement : MonoBehaviour
     private bool run_R;
     private bool run_L;
     private bool isFacingRight = true;
-    private bool isControlling;
+    private bool isControlling = true;
 
     [SerializeField] [Range(0.0f, 70.0f)] private float gravity = 3f;
     [SerializeField] [Range(0.0f, 70.0f)] private float fallGravity = 4f;
@@ -123,7 +123,7 @@ public class PlayerMovement : MonoBehaviour
 
     private void OnRun_R()
     {
-        if (run_R == true) return; ;
+        if (run_R == true) return;
         run_R = true;
     }
     private void OnRun_R_Idle()

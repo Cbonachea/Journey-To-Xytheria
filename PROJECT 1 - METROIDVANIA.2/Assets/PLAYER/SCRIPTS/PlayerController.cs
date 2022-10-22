@@ -6,20 +6,18 @@ using UnityEngine;
 public class PlayerController : MonoBehaviour
 {
 
-    private Rigidbody2D rb_player;
     private Transform attackPoint;
     private float attackRange = 0.5f;
     public LayerMask enemyLayer;
     private Animator animator;
 
     private bool isControlling;
-    private bool isFacingRight = true;
     private bool attack;
     private bool canAttack;
     private bool isAttacking;
-    [SerializeField] internal bool grounded = true;
     private bool takeDamage;
     private bool die;
+    internal bool grounded;
 
      
     [SerializeField][Range(0.0f, 70.0f)]private int hp = 100;        
@@ -84,8 +82,6 @@ public class PlayerController : MonoBehaviour
     private void Die()
     {
         isControlling = false;
-        rb_player.angularDrag = 0f;
-        rb_player.gravityScale = -0.4f;
         Debug.Log("Player Dead");
     }
 
