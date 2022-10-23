@@ -19,6 +19,7 @@ public class PlayerController : MonoBehaviour
     private bool die;
     internal bool grounded;
 
+
      
     [SerializeField][Range(0.0f, 70.0f)]private int hp = 100;        
     [SerializeField] private PlayerMovement playerMovement;        
