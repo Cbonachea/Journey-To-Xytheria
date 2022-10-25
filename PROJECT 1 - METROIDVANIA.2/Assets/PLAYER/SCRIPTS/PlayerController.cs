@@ -141,4 +141,5 @@ public class PlayerController : MonoBehaviour
         GameEvents.current.onTakeDamage -= OnTakeDamage;
         GameEvents.current.onNoHp -= OnDie;
     }
+
 }
