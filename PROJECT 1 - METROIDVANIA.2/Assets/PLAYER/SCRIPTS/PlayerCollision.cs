@@ -8,11 +8,12 @@ public class PlayerCollision : MonoBehaviour
 
     private void OnCollisionExit2D(Collision2D collision)
     {
-        if (collision.gameObject.tag == "ground") playerController.grounded = false;
+        if (playerController.grounded == false) return;
+        else if (collision.gameObject.tag == "ground") playerController.grounded = false;
     }
     private void OnCollisionStay2D(Collision2D collision)
     {
-        if (collision.gameObject.tag == "ground") playerController.grounded = true;
+        if (playerController.grounded == true) return;
+        else if (collision.gameObject.tag == "ground") playerController.grounded = true;
     }
-
 }

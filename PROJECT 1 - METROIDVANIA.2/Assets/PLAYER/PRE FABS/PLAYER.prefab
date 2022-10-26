@@ -162,13 +162,9 @@ MonoBehaviour:
   enemyLayer:
     serializedVersion: 2
     m_Bits: 0
-  grounded: 1
   hp: 100
   playerMovement: {fileID: 3798789652745798056}
   playerCollision: {fileID: 932219995834042064}
-  attackDamage: 1
-  attackWindUp: 0.3
-  attackCoolDown: 0.3
 --- !u!114 &3798789652745798056
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -190,7 +186,7 @@ MonoBehaviour:
   jumpCoolDown: 0.3
   runSpeed: 9
   maxRunSpeed: 5
-  dashPower: 250
+  dashPower: 55
   dashCoolDown: 0.2
   dashPeriod: 0.1
 --- !u!114 &932219995834042064

@@ -7,14 +7,12 @@ public class PlayerMovement : MonoBehaviour
 
     private Vector3 playerScale;
     private Rigidbody2D rb_player;
-    private Animator playerAnimator;
     [SerializeField] PlayerController playerController;
 
 
     private bool jump;
     private bool canJump = true;
     private bool isJumping;
-    private bool grounded;
     private bool dash;
     private bool canDash = true;
     private bool isDashing;
@@ -41,12 +39,12 @@ public class PlayerMovement : MonoBehaviour
 
     private void Start()
     {
-        playerAnimator = GetComponent<Animator>();
         rb_player = GetComponent<Rigidbody2D>();
         rb_player.gravityScale = gravity;
+        SubscribeMovementEvents();
     }
 
-    private void SubscribeGameEvents()
+    private void SubscribeMovementEvents()
     {
         GameEvents.current.onJump_Input += OnJump;
         GameEvents.current.onJump_Input_Idle += OnJump_Idle;
@@ -56,19 +54,18 @@ public class PlayerMovement : MonoBehaviour
         GameEvents.current.onRun_L_Input_Idle += OnRun_L_Idle; 
         GameEvents.current.onDash_Input += OnDash;
         GameEvents.current.onDash_Input_Idle += OnDash_Idle;
-        Debug.Log("Game Events Subscribed");
+        Debug.Log("Movement Events Subscribed");
     }
     void Update()
     {
-
         if (!isControlling) return;
         if (run_R || run_L) rb_player.gravityScale = gravity;
-        if (!grounded && jump) rb_player.gravityScale = gravity;
-        if (!grounded && !jump)
+        if (!playerController.grounded && jump) rb_player.gravityScale = gravity;
+        if (!playerController.grounded && !jump)
         {
             rb_player.gravityScale = fallGravity;
         }
-        if (!run_R && !run_L && !jump && grounded)
+        if (!run_R && !run_L && !jump && playerController.grounded)
         {
             rb_player.gravityScale = stopGravity;
         }
@@ -81,8 +78,6 @@ public class PlayerMovement : MonoBehaviour
         if (rb_player.velocity.y < -maxFallSpeed)
             rb_player.velocity = new Vector2(rb_player.velocity.x, -maxFallSpeed);
 
-        if (isJumping) playerAnimator.SetBool("isJumping", true);
-
         Flip();
 
 
@@ -92,7 +87,7 @@ public class PlayerMovement : MonoBehaviour
     private void FixedUpdate()
     {
         if (!isControlling) return;
-        if (canJump && jump && grounded) StartCoroutine(Jump());
+        if (canJump && jump && playerController.grounded) StartCoroutine(Jump());
         if (canDash && dash) StartCoroutine(Dash());
         if (run_R == true) Run_R();
         if (run_L == true) Run_L();
@@ -102,7 +97,7 @@ public class PlayerMovement : MonoBehaviour
     private void OnJump()
     {
         if (jump) return;
-        if (!grounded) return;
+        if (!playerController.grounded) return;
         jump = true;
     }
     private void OnJump_Idle()
