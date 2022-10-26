@@ -12,6 +12,7 @@ public class PlayerAttack : MonoBehaviour
     private bool canAttack;
     private bool isAttacking;
 
+    [SerializeField] PlayerController playerController;
     [SerializeField] [Range(0.0f, 70.0f)] private float attackDamage = 1f;
     [SerializeField] [Range(0.0f, 70.0f)] private float attackWindUp = .3f;
     [SerializeField] [Range(0.0f, 70.0f)] private float attackCoolDown = .3f;

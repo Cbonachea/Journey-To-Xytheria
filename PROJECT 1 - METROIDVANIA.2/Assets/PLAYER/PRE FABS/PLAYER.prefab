@@ -16,7 +16,8 @@ GameObject:
   - component: {fileID: 7337010055841433693}
   - component: {fileID: 3798789652745798056}
   - component: {fileID: 932219995834042064}
-  m_Layer: 0
+  - component: {fileID: 8782444725023300040}
+  m_Layer: 6
   m_Name: PLAYER
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -159,12 +160,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 818f1624d42957a4fbd3bc83b3ed4b56, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  enemyLayer:
-    serializedVersion: 2
-    m_Bits: 0
   hp: 100
+  heat: 100
   playerMovement: {fileID: 3798789652745798056}
   playerCollision: {fileID: 932219995834042064}
+  playerAttack: {fileID: 8782444725023300040}
 --- !u!114 &3798789652745798056
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -186,9 +186,9 @@ MonoBehaviour:
   jumpCoolDown: 0.3
   runSpeed: 9
   maxRunSpeed: 5
-  dashPower: 55
+  dashPower: 25
   dashCoolDown: 0.2
-  dashPeriod: 0.1
+  dashPeriod: 0.01
 --- !u!114 &932219995834042064
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -202,3 +202,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerController: {fileID: 7337010055841433693}
+--- !u!114 &8782444725023300040
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3071217719308447891}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bef45d798d8b2354f8aa0427399c3e83, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playerController: {fileID: 7337010055841433693}
+  attackDamage: 1
+  attackWindUp: 0.3
+  attackCoolDown: 0.3
