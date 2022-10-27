@@ -12,6 +12,7 @@ public class GameEvents : MonoBehaviour
         current = this;
     }
 
+    public event Action onIdle;
     public event Action onJump_Input;
     public event Action onJump_Input_Idle;
     public event Action onRun_R_Input;
@@ -45,6 +46,13 @@ public class GameEvents : MonoBehaviour
     public event Action onTakeDamage;
     public event Action onNoHp;
 
+    public void Idle()
+    {
+        if (onIdle != null)
+        {
+            onIdle();
+        }
+    }        
     public void Jump_Input()
     {
         if (onJump_Input != null)

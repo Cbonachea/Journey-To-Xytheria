@@ -115,7 +115,7 @@ public class PlayerMovement : MonoBehaviour
         if (!dash) return;
         dash = false;
     }
-
+ 
     private void OnRun_R()
     {
         if (run_R == true) return;
@@ -136,7 +136,7 @@ public class PlayerMovement : MonoBehaviour
         if (!run_L) return;
         run_L = false;
     }
-
+  
     private IEnumerator Dash()
     {
         canDash = false;
@@ -157,6 +157,7 @@ public class PlayerMovement : MonoBehaviour
     }
     private IEnumerator Jump()
     {
+        playerController.ChangeAnimationState("isJumping", PlayerController.animStateType.Bool, bool.TrueString);
         canJump = false;
         isJumping = true;
         rb_player.gravityScale = 3f;
@@ -164,6 +165,7 @@ public class PlayerMovement : MonoBehaviour
         yield return new WaitForSeconds(jumpCoolDown);
         isJumping = false;
         canJump = true;
+        playerController.ChangeAnimationState("isJumping", PlayerController.animStateType.Bool, bool.FalseString);
     }
 
     private void Run_R()

@@ -6,7 +6,6 @@ public class PlayerInput : MonoBehaviour
 {
     private float xInput;
     private float yInput;
-    private float attackInput;
     private float subWeaponInput;
     private float grappleInput;
     private float dashInput;
@@ -17,6 +16,7 @@ public class PlayerInput : MonoBehaviour
     private float mapInput;
 
     private bool jumpInput;
+    private bool attackInput;
 
 
     private void Update()
@@ -24,7 +24,7 @@ public class PlayerInput : MonoBehaviour
         xInput = (Input.GetAxis("Horizontal"));
         yInput = (Input.GetAxis("Vertical"));
         jumpInput = (Input.GetButton("Jump"));
-        attackInput = (Input.GetAxis("Attack"));
+        attackInput = (Input.GetButton("Attack"));
         subWeaponInput = (Input.GetAxis("SubWeapon"));
         grappleInput = (Input.GetAxis("Grapple"));
         dashInput = (Input.GetAxis("Dash"));
@@ -52,8 +52,8 @@ public class PlayerInput : MonoBehaviour
         if (yInput == -1) GameEvents.current.Crouch_Input();
         if (yInput == 0) GameEvents.current.Crouch_Input_Idle();
 
-        if (attackInput == 1) GameEvents.current.Attack_Input();
-        if (attackInput == 0) GameEvents.current.Attack_Input_Idle();
+        if (attackInput) GameEvents.current.Attack_Input();
+        if (!attackInput) GameEvents.current.Attack_Input_Idle();
 
         if (subWeaponInput == 1) GameEvents.current.SubWeapon_Input();
         if (subWeaponInput == 0) GameEvents.current.SubWeapon_Input_Idle();
@@ -79,6 +79,6 @@ public class PlayerInput : MonoBehaviour
         if (mapInput == 1) GameEvents.current.Map_Input();
         if (mapInput == 0) GameEvents.current.Map_Input_Idle();
 
-
+        else GameEvents.current.Idle();
     }
 }
