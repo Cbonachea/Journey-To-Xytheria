@@ -79,6 +79,6 @@ public class PlayerInput : MonoBehaviour
         if (mapInput == 1) GameEvents.current.Map_Input();
         if (mapInput == 0) GameEvents.current.Map_Input_Idle();
 
-        else GameEvents.current.Idle();
+
     }
 }
