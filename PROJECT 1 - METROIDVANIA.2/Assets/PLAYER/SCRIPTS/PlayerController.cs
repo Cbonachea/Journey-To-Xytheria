@@ -71,6 +71,7 @@ public class PlayerController : MonoBehaviour
 
     public void ChangeAnimationState(string condition, animStateType type = animStateType.Trigger ,string value = null)
     {
+        //this is basically a complicated if statement courtesy of Brent L.
         switch (type)
         {
             case animStateType.Trigger:
