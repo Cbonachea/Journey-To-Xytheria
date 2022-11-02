@@ -70,14 +70,12 @@ public class PlayerMovement : MonoBehaviour
             rb_player.gravityScale = stopGravity;
         }
 
-
         if (rb_player.velocity.x > maxRunSpeed)
             rb_player.velocity = new Vector2(maxRunSpeed, rb_player.velocity.y);
         if (rb_player.velocity.x < -maxRunSpeed)
             rb_player.velocity = new Vector2(-maxRunSpeed, rb_player.velocity.y);
         if (rb_player.velocity.y < -maxFallSpeed)
             rb_player.velocity = new Vector2(rb_player.velocity.x, -maxFallSpeed);
-
         Flip();
 
 
