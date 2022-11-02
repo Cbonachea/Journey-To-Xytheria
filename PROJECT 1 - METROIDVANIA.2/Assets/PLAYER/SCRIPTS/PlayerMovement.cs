@@ -59,7 +59,11 @@ public class PlayerMovement : MonoBehaviour
     void Update()
     {
         if (!isControlling) return;
-        if (run_R || run_L) rb_player.gravityScale = gravity;
+        if (run_R || run_L)
+        {
+            playerController.ChangeAnimationState("isRunning", PlayerController.animStateType.Bool, bool.TrueString);
+            rb_player.gravityScale = gravity;
+        }
         if (!playerController.grounded && jump) rb_player.gravityScale = gravity;
         if (!playerController.grounded && !jump)
         {
@@ -87,8 +91,13 @@ public class PlayerMovement : MonoBehaviour
         if (!isControlling) return;
         if (canJump && jump && playerController.grounded) StartCoroutine(Jump());
         if (canDash && dash) StartCoroutine(Dash());
+        if (playerController.grounded == false && !jump)
+        {
+            playerController.ChangeAnimationState("isFalling", PlayerController.animStateType.Bool, bool.TrueString);
+        }
         if (run_R == true) Run_R();
         if (run_L == true) Run_L();
+        else playerController.ChangeAnimationState("isRunning", PlayerController.animStateType.Bool, bool.FalseString);
     }
 
 

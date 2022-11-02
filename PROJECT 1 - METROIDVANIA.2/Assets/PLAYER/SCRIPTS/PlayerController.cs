@@ -12,18 +12,12 @@ public class PlayerController : MonoBehaviour
     private bool takeDamage;
     private bool die;
     internal bool grounded;
-
-
-     
+         
     [SerializeField][Range(0, 100)]private int hp = 100;        
     [SerializeField][Range(0.0f, 250.0f)]private float heat = 100f;        
     [SerializeField] private PlayerMovement playerMovement;        
     [SerializeField] private PlayerCollision playerCollision;        
     [SerializeField] private PlayerAttack playerAttack;        
-
-
-
-
 
     void Start()
     {
@@ -38,27 +32,14 @@ public class PlayerController : MonoBehaviour
     }
     private void SubscribeGameEvents()
     {
-        GameEvents.current.onIdle += OnIdle;
         GameEvents.current.onTakeDamage += OnTakeDamage;
         GameEvents.current.onNoHp += OnDie;
-
-        GameEvents.current.onAttack_Input += OnAttack;
-    //    GameEvents.current.onAttack_Input_Idle += OnAttack_Idle;
-
-        GameEvents.current.onJump_Input += OnJump;
-   //     GameEvents.current.onJump_Input_Idle += OnJump_Idle;
-
-        GameEvents.current.onRun_R_Input += OnRun_R;
-
-     //   GameEvents.current.onRun_R_Input_Idle += OnRun_R_Idle;
-        GameEvents.current.onRun_L_Input += OnRun_L;
-    //    GameEvents.current.onRun_L_Input_Idle += OnRun_L_Idle;
-    //    GameEvents.current.onDash_Input += OnDash;
-    //    GameEvents.current.onDash_Input_Idle += OnDash_Idle;
-
-
-
         Debug.Log("Game Events Subscribed");
+    }
+
+    void Update()
+    {
+    
     }
 
     public enum animStateType
@@ -87,19 +68,7 @@ public class PlayerController : MonoBehaviour
                 animator.SetFloat(condition, float.Parse(value));
                 break;
         }
-        /*
-        if (currentState == newState) return;
-
-        animator.Play(newState);
-        currentState = newState;
-    */
     }
-
-    private void OnIdle()
-    {
-
-    }
-
 
     private void NoHp()
     {
@@ -133,66 +102,11 @@ public class PlayerController : MonoBehaviour
             Die();
         }
     }
-    private void OnRun_R()
-    {
-    }    
-  /*  private void OnRun_R_Idle()
-    {
-        ChangeAnimationState("playerIdle");
-    }*/
-    private void OnRun_L()
-    {
-    }
-   /* private void OnRun_L_Idle()
-    {
-        ChangeAnimationState("playerIdle");
-    }*/
-    private void OnJump()
-    {
-    }    
-    /*
-    private void OnJump_Idle()
-    {
-        ChangeAnimationState("playerFall");
-    }
-    */
- /*   private void OnDash()
-    {
-        ChangeAnimationState("playerDash");
-    }*/    
-  /*  private void OnDash_Idle()
-    {
-        ChangeAnimationState("playerIdle");
-    }*/    
-    private void OnAttack()
-    {
-    }    
-   /* private void OnAttack_Idle()
-    {
-        ChangeAnimationState("playerIdle");
-    }
-   */
-
-
 
     private void OnDestroy()
     {
         GameEvents.current.onTakeDamage -= OnTakeDamage;
         GameEvents.current.onNoHp -= OnDie;
-
-        GameEvents.current.onAttack_Input -= OnAttack;
-    //    GameEvents.current.onAttack_Input_Idle -= OnAttack_Idle;
-
-        GameEvents.current.onJump_Input -= OnJump;
-        //     GameEvents.current.onJump_Input_Idle -= OnJump_Idle;
-
-        GameEvents.current.onRun_R_Input -= OnRun_R;
-
-    //    GameEvents.current.onRun_R_Input_Idle -= OnRun_R_Idle;
-        GameEvents.current.onRun_L_Input -= OnRun_L;
-    //    GameEvents.current.onRun_L_Input_Idle -= OnRun_L_Idle;
-    //    GameEvents.current.onDash_Input -= OnDash;
-    //    GameEvents.current.onDash_Input_Idle -= OnDash_Idle;
     }
 
 }

@@ -9,8 +9,8 @@ public class PlayerAttack : MonoBehaviour
     private float attackRange = 0.5f;
 
     private bool attack;
-    private bool canAttack;
-    private bool isAttacking;
+    private bool canAttack = true;
+    private bool isAttacking = false;
 
     [SerializeField] PlayerController playerController;
     [SerializeField] [Range(0.0f, 70.0f)] private float attackDamage = 1f;
@@ -27,9 +27,18 @@ public class PlayerAttack : MonoBehaviour
         Debug.Log("Attack Events Subscribed");
     }
 
+    void Update()
+    {
+        if (attack && canAttack)
+        {
+            StartCoroutine(Attack());
+            canAttack = false;
+        }
+    }
+
     private void OnAttack()
     {
-        if (attack == true) return;
+        if (attack) return;
         attack = true;
     }
     private void OnAttack_Idle()
@@ -37,25 +46,27 @@ public class PlayerAttack : MonoBehaviour
         if (!attack) return;
         attack = false;
     }
-/*    private IEnumerator Attack()
+    private IEnumerator Attack()
     {
-        canAttack = false;
+        playerController.ChangeAnimationState("isAttacking", PlayerController.animStateType.Bool, bool.TrueString);
         isAttacking = true;
         //enter wind up state animation trigger
         yield return new WaitForSeconds(attackWindUp);
 
-        Collider2D[] hitEnemies = Physics2D.OverlapCircleAll(attackPoint.position, attackRange, enemyLayer);
+    //    Collider2D[] hitEnemies = Physics2D.OverlapCircleAll(attackPoint.position, attackRange, enemyLayer);
 
-        foreach (Collider2D enemy in hitEnemies)
-        {
-            Debug.Log("Hit" + enemy.name);
-        }
+    //    foreach (Collider2D enemy in hitEnemies)
+    //    {
+    //        Debug.Log("Hit" + enemy.name);
+    //    }
 
         //enter recovery state animation trigger
+
+        playerController.ChangeAnimationState("isAttacking", PlayerController.animStateType.Bool, bool.FalseString);
+        isAttacking = false;
         yield return new WaitForSeconds(attackCoolDown);
         canAttack = true;
     }
-  */
     private void OnDestroy()
     {
         GameEvents.current.onAttack_Input -= OnAttack;
