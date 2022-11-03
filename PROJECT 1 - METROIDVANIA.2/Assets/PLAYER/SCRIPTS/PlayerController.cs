@@ -11,6 +11,7 @@ public class PlayerController : MonoBehaviour
 
     private bool takeDamage;
     private bool die;
+
     internal bool grounded;
          
     [SerializeField][Range(0, 100)]private int hp = 100;        

@@ -3612,6 +3612,16 @@ PrefabInstance:
       propertyPath: m_Name
       value: PLAYER
       objectReference: {fileID: 0}
+    - target: {fileID: 3798789652745798056, guid: d8d7ef04d12696449a8549101d26f39e,
+        type: 3}
+      propertyPath: gravity
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 3798789652745798056, guid: d8d7ef04d12696449a8549101d26f39e,
+        type: 3}
+      propertyPath: fallGravity
+      value: 4
+      objectReference: {fileID: 0}
     - target: {fileID: 6625112328197805066, guid: d8d7ef04d12696449a8549101d26f39e,
         type: 3}
       propertyPath: m_FlipX

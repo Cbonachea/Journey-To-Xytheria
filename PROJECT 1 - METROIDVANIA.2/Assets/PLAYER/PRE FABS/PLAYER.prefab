@@ -178,15 +178,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerController: {fileID: 7337010055841433693}
-  gravity: 3
-  fallGravity: 4
+  gravity: 4
+  fallGravity: 5
   stopGravity: 10
   maxFallSpeed: 25
   jumpHeight: 25
   jumpCoolDown: 0.3
   runSpeed: 9
   maxRunSpeed: 5
-  dashPower: 25
+  dashPower: 50
   dashCoolDown: 0.5
   dashPeriod: 0.01
 --- !u!114 &932219995834042064
