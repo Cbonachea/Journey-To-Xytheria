@@ -178,8 +178,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerController: {fileID: 7337010055841433693}
-  gravity: 4
-  fallGravity: 5
+  gravity: 3
+  fallGravity: 4
   stopGravity: 10
   maxFallSpeed: 25
   jumpHeight: 25
