@@ -16,6 +16,7 @@ public class PlayerMovement : MonoBehaviour
     private bool dash;
     private bool canDash = true;
     private bool isDashing;
+    private bool playerStop;
 
     private bool run_R;
     private bool run_L;
@@ -80,6 +81,7 @@ public class PlayerMovement : MonoBehaviour
             rb_player.velocity = new Vector2(-maxRunSpeed, rb_player.velocity.y);
         if (rb_player.velocity.y < -maxFallSpeed)
             rb_player.velocity = new Vector2(rb_player.velocity.x, -maxFallSpeed);
+        if (!run_R && !run_L && playerStop == true) PlayerStop();
         Flip();
 
 
@@ -95,8 +97,8 @@ public class PlayerMovement : MonoBehaviour
         {
             playerController.ChangeAnimationState("isFalling", PlayerController.animStateType.Bool, bool.TrueString);
         }
-        if (run_R == true) Run_R();
-        if (run_L == true) Run_L();
+        if (run_R) Run_R();
+        if (run_L) Run_L();
         else playerController.ChangeAnimationState("isRunning", PlayerController.animStateType.Bool, bool.FalseString);
     }
 
@@ -122,7 +124,6 @@ public class PlayerMovement : MonoBehaviour
         if (!dash) return;
         dash = false;
     }
- 
     private void OnRun_R()
     {
         if (run_R == true) return;
@@ -130,8 +131,10 @@ public class PlayerMovement : MonoBehaviour
     }
     private void OnRun_R_Idle()
     {
+
         if (!run_R) return;
         run_R = false;
+        playerStop = true;
     }
     private void OnRun_L()
     {
@@ -140,14 +143,18 @@ public class PlayerMovement : MonoBehaviour
     }
     private void OnRun_L_Idle()
     {
+
         if (!run_L) return;
         run_L = false;
+        playerStop = true;
+
     }
-  
+
     private IEnumerator Dash()
     {
         canDash = false;
         isDashing = true;
+        playerController.ChangeAnimationState("isDashing", PlayerController.animStateType.Bool, bool.TrueString);
         isControlling = false;
         float originalGravity = rb_player.gravityScale;
         float tempMaxRunSpeed = maxRunSpeed;
@@ -155,6 +162,8 @@ public class PlayerMovement : MonoBehaviour
         rb_player.gravityScale = 0f;
         rb_player.velocity = new Vector2(transform.localScale.x * dashPower, 0f);
         yield return new WaitForSeconds(dashPeriod);
+        playerController.ChangeAnimationState("isDashing", PlayerController.animStateType.Bool, bool.FalseString);
+        PlayerStop();
         rb_player.gravityScale = originalGravity;
         isDashing = false;
         maxRunSpeed = tempMaxRunSpeed;
@@ -182,6 +191,20 @@ public class PlayerMovement : MonoBehaviour
     private void Run_L()
     {
         rb_player.AddForce(transform.right * -runSpeed, ForceMode2D.Impulse);
+    }
+    private void PlayerStop()
+    {
+        if (run_R || run_L)
+        {
+            playerController.ChangeAnimationState("isStopping", PlayerController.animStateType.Bool, bool.FalseString);
+            return;
+        }
+        else playerController.ChangeAnimationState("isStopping", PlayerController.animStateType.Bool, bool.TrueString);
+        if (Mathf.Abs(rb_player.velocity.x) <= .3f)
+        {
+            playerController.ChangeAnimationState("isStopping", PlayerController.animStateType.Bool, bool.FalseString);
+        }
+
     }
     private void Flip()
     {

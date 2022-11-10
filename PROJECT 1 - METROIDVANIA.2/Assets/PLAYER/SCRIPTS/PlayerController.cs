@@ -29,6 +29,7 @@ public class PlayerController : MonoBehaviour
     {
         SubscribeGameEvents();
         animator = GetComponent<Animator>();
+        ChangeAnimationState("isRunning", PlayerController.animStateType.Bool, bool.FalseString);
         Debug.Log("Player Animator Initialized");
     }
     private void SubscribeGameEvents()
@@ -38,10 +39,6 @@ public class PlayerController : MonoBehaviour
         Debug.Log("Game Events Subscribed");
     }
 
-    void Update()
-    {
-    
-    }
 
     public enum animStateType
     {

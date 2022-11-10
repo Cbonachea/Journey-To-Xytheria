@@ -3612,15 +3612,20 @@ PrefabInstance:
       propertyPath: m_Name
       value: PLAYER
       objectReference: {fileID: 0}
-    - target: {fileID: 3798789652745798056, guid: d8d7ef04d12696449a8549101d26f39e,
+    - target: {fileID: 3832617430774381770, guid: d8d7ef04d12696449a8549101d26f39e,
         type: 3}
-      propertyPath: gravity
-      value: 3
+      propertyPath: m_Size.x
+      value: 0.73
       objectReference: {fileID: 0}
-    - target: {fileID: 3798789652745798056, guid: d8d7ef04d12696449a8549101d26f39e,
+    - target: {fileID: 3832617430774381770, guid: d8d7ef04d12696449a8549101d26f39e,
         type: 3}
-      propertyPath: fallGravity
-      value: 4
+      propertyPath: m_Size.y
+      value: 1.75
+      objectReference: {fileID: 0}
+    - target: {fileID: 3832617430774381770, guid: d8d7ef04d12696449a8549101d26f39e,
+        type: 3}
+      propertyPath: m_WasSpriteAssigned
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6625112328197805066, guid: d8d7ef04d12696449a8549101d26f39e,
         type: 3}
