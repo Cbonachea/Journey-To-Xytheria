@@ -215,7 +215,6 @@ public class PlayerMovement : MonoBehaviour
             playerScale.x *= -1;
             transform.localScale = playerScale;
             isFacingRight = !isFacingRight;
-            Debug.Log(isFacingRight);
         }
     }
 

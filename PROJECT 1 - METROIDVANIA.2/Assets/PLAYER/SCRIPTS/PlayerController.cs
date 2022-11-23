@@ -15,7 +15,6 @@ public class PlayerController : MonoBehaviour
     internal bool grounded;
          
     [SerializeField][Range(0, 100)]private int hp = 100;        
-    [SerializeField][Range(0.0f, 250.0f)]private float heat = 100f;        
     [SerializeField] private PlayerMovement playerMovement;        
     [SerializeField] private PlayerCollision playerCollision;        
     [SerializeField] private PlayerAttack playerAttack;        
