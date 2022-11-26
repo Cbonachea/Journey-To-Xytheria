@@ -15,11 +15,12 @@ public class HeatSource : MonoBehaviour
         if (playerHeat.isHeatingUp) return;
         StartCoroutine(HeatUp());
     }
-    private void OnTriggerExit2D(Collider2D collision)
+ /*   private void OnTriggerExit2D(Collider2D collision)
     {
+        if (playerHeat.isHeatingUp) return;
         playerHeat.PassiveCooling();
     }
-    private IEnumerator HeatUp()
+*/  private IEnumerator HeatUp()
     {
         playerHeat.isCoolingDown = false;
         playerHeat.isHeatingUp = true;

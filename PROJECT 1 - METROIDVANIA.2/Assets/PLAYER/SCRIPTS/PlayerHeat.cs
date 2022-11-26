@@ -15,6 +15,11 @@ public class PlayerHeat : MonoBehaviour
     internal bool isCoolingDown;
     internal bool coolingBuffer = true;
 
+    private void Update()
+    {
+        if (!isHeatingUp) PassiveCooling();
+    }
+
     public void IncrementHeat(int heatDelta)
     {
         heatDelta = ApplyInsulation(heatDelta);
