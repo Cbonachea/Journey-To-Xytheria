@@ -10,22 +10,24 @@ public class HeatSource : MonoBehaviour
     [SerializeField] [Range(-100, 100)] private int heatIntensity = 1;
     [SerializeField] [Range(0.1f, 10f)] private float heatPeriod = 1;
 
-    private void OnTriggerStay2D(Collider2D collision)
+    private void OnTriggerEnter2D(Collider2D collision)
     {
         if (playerHeat.isHeatingUp) return;
-        StartCoroutine(HeatUp());
+        else StartCoroutine(HeatUp());
     }
- /*   private void OnTriggerExit2D(Collider2D collision)
+    private void OnTriggerExit2D(Collider2D collision)
     {
-        if (playerHeat.isHeatingUp) return;
         playerHeat.PassiveCooling();
     }
-*/  private IEnumerator HeatUp()
+    private IEnumerator HeatUp()
     {
         playerHeat.isCoolingDown = false;
         playerHeat.isHeatingUp = true;
-        playerHeat.IncrementHeat(heatIntensity);
-        yield return new WaitForSeconds(heatPeriod);
+        while (playerHeat.heatLevel < playerHeat.maxHeat)
+        {
+            yield return new WaitForSeconds(heatPeriod);
+            playerHeat.IncrementHeat(heatIntensity);
+        }
         playerHeat.isHeatingUp = false;
     }
 

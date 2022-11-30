@@ -21,24 +21,24 @@ public class PlayerInput : MonoBehaviour
 
     private void Update()
     {
-        xInput = (Input.GetAxis("Horizontal"));
-        yInput = (Input.GetAxis("Vertical"));
-        jumpInput = (Input.GetButton("Jump"));
-        attackInput = (Input.GetButton("Attack"));
-        subWeaponInput = (Input.GetAxis("SubWeapon"));
-        grappleInput = (Input.GetAxis("Grapple"));
-        dashInput = (Input.GetAxis("Dash"));
-        slideInput = (Input.GetAxis("Slide"));
-        sipInput = (Input.GetAxis("Sip"));
-        switchDrinkInput = (Input.GetAxis("SwitchDrink"));
-        menuInput = (Input.GetAxis("Menu"));
-        mapInput = (Input.GetAxis("Map"));
+            xInput = (Input.GetAxis("Horizontal"));
+            yInput = (Input.GetAxis("Vertical"));
+            jumpInput = (Input.GetButton("Jump"));
+            attackInput = (Input.GetButton("Attack"));
+            subWeaponInput = (Input.GetAxis("SubWeapon"));
+            grappleInput = (Input.GetAxis("Grapple"));
+            dashInput = (Input.GetAxis("Dash"));
+            slideInput = (Input.GetAxis("Slide"));
+            sipInput = (Input.GetAxis("Sip"));
+            switchDrinkInput = (Input.GetAxis("SwitchDrink"));
+            menuInput = (Input.GetAxis("Menu"));
+            mapInput = (Input.GetAxis("Map"));
 
-        //    if (xInput == .2) GameEvents.current.Walk_R_Input();
-        //    if (xInput == 0) GameEvents.current.Walk_R_Input_Idle();
+        if (xInput == .2) GameEvents.current.Walk_R_Input();
+        if (xInput == 0) GameEvents.current.Walk_R_Input_Idle();
 
-        //    if (xInput == -.2) GameEvents.current.Walk_L_Input();
-        //    if (xInput == 0) GameEvents.current.Walk_L_Input_Idle();
+        if (xInput == -.2) GameEvents.current.Walk_L_Input();
+        if (xInput == 0) GameEvents.current.Walk_L_Input_Idle();
 
         if (jumpInput) GameEvents.current.Jump_Input();
         if (!jumpInput) GameEvents.current.Jump_Input_Idle();
@@ -47,7 +47,10 @@ public class PlayerInput : MonoBehaviour
         if (xInput <= 0.8) GameEvents.current.Run_R_Input_Idle();
                 
         if (xInput == -1) GameEvents.current.Run_L_Input();
-        if (xInput >= -0.8) GameEvents.current.Run_L_Input_Idle();
+        if (xInput > -0.8) GameEvents.current.Run_L_Input_Idle();
+
+        if (xInput == -0.8) GameEvents.current.Walk_L_Input();
+        if (xInput >= -0.1) GameEvents.current.Walk_L_Input_Idle();
 
         if (yInput == -1) GameEvents.current.Crouch_Input();
         if (yInput == 0) GameEvents.current.Crouch_Input_Idle();

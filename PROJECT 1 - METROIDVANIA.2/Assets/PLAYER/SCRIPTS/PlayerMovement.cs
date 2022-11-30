@@ -20,6 +20,7 @@ public class PlayerMovement : MonoBehaviour
 
     private bool run_R;
     private bool run_L;
+    private bool walk_L;
     private bool isFacingRight = true;
     private bool isControlling = true;
 
@@ -32,7 +33,10 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] [Range(0.0f, 70.0f)] private float jumpCoolDown = .3f;
 
     [SerializeField] [Range(0.0f, 70.0f)] private float runSpeed = 9f;
+    [SerializeField] [Range(0.0f, 70.0f)] private float walkSpeed = 4f;
     [SerializeField] [Range(0.0f, 70.0f)] private float maxRunSpeed = 5f;
+    [SerializeField] [Range(0.0f, 70.0f)] private float maxWalkSpeed = 5f;
+                                          private float cachedMaxRunSpeed;
 
     [SerializeField] [Range(0.0f, 1000.0f)] private float dashPower = 250f;
     [SerializeField] [Range(0.0f, 1000.0f)] private float dashCoolDown = .2f;
@@ -53,6 +57,8 @@ public class PlayerMovement : MonoBehaviour
         GameEvents.current.onRun_R_Input_Idle += OnRun_R_Idle;
         GameEvents.current.onRun_L_Input += OnRun_L;
         GameEvents.current.onRun_L_Input_Idle += OnRun_L_Idle; 
+   /*     GameEvents.current.onRun_L_Input += OnWalk_L;
+        GameEvents.current.onRun_L_Input_Idle += OnWalk_L_Idle; */
         GameEvents.current.onDash_Input += OnDash;
         GameEvents.current.onDash_Input_Idle += OnDash_Idle;
         Debug.Log("Movement Events Subscribed");
@@ -99,6 +105,7 @@ public class PlayerMovement : MonoBehaviour
         }
         if (run_R) Run_R();
         if (run_L) Run_L();
+  //      if (walk_L) Walk_L();
         else playerController.ChangeAnimationState("isRunning", PlayerController.animStateType.Bool, bool.FalseString);
     }
 
@@ -131,7 +138,6 @@ public class PlayerMovement : MonoBehaviour
     }
     private void OnRun_R_Idle()
     {
-
         if (!run_R) return;
         run_R = false;
         playerStop = true;
@@ -143,13 +149,23 @@ public class PlayerMovement : MonoBehaviour
     }
     private void OnRun_L_Idle()
     {
-
         if (!run_L) return;
         run_L = false;
         playerStop = true;
-
+    }    
+  /*  private void OnWalk_L()
+    {
+        if (walk_L == true) return;
+        walk_L = true;
     }
-
+    private void OnWalk_L_Idle()
+    {
+        if (!walk_L) return;
+        walk_L = false;
+        playerStop = true;
+        maxRunSpeed = cachedMaxRunSpeed;
+    }
+  */
     private IEnumerator Dash()
     {
         canDash = false;
@@ -190,9 +206,15 @@ public class PlayerMovement : MonoBehaviour
     }
     private void Run_L()
     {
-        rb_player.AddForce(transform.right * -runSpeed, ForceMode2D.Impulse);
+        rb_player.AddForce(-transform.right * runSpeed, ForceMode2D.Impulse);
+    }    
+ /*   private void Walk_L()
+    {
+        cachedMaxRunSpeed = maxRunSpeed;
+        maxRunSpeed = maxWalkSpeed;
+        rb_player.AddForce(-transform.right * walkSpeed, ForceMode2D.Impulse);
     }
-    private void PlayerStop()
+*/    private void PlayerStop()
     {
         if (run_R || run_L)
         {
@@ -226,5 +248,7 @@ public class PlayerMovement : MonoBehaviour
         GameEvents.current.onRun_R_Input_Idle -= OnRun_R_Idle;
         GameEvents.current.onRun_L_Input -= OnRun_L;
         GameEvents.current.onRun_L_Input_Idle -= OnRun_L_Idle;
+  /*      GameEvents.current.onRun_L_Input += OnWalk_L;
+        GameEvents.current.onRun_L_Input_Idle += OnWalk_L_Idle; */
     }
 }
